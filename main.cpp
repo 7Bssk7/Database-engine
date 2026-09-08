@@ -10,7 +10,7 @@ unordered_map<string, uint64_t> hash_table;
 
 void write_record(const string& filename, const string& key, const string& value){
     ofstream file(filename, ios::binary | ios::app);
-    if(!file.is_open()){
+    if(!file){
         cout << "Failed to open the file!" << endl;
 
         return;
@@ -31,6 +31,18 @@ void write_record(const string& filename, const string& key, const string& value
 
     cout << "Saved: '" << key  <<"' with value of '" << value << "'at byte offset " << offset << endl;
 
+
+}
+
+string read_record(const string& filename, const string& key){
+
+    ifstream file(filename, ios::binary);
+
+    if(!file){
+        cout << "Failed to open the file!" << endl;
+
+        return "";
+    }
 
 }
 
