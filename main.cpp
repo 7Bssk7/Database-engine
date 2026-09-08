@@ -29,12 +29,22 @@ void write_record(const string& filename, const string& key, const string& value
 
     hash_table[key] = offset;
 
+    file.close();
+
     cout << "Saved: '" << key  <<"' with value of '" << value << "'at byte offset " << offset << endl;
 
 
 }
 
 string read_record(const string& filename, const string& key){
+   
+    if(hash_table.find(key) == hash_table.end()){
+        cout << "Error Key: '" << key << "' was not found" << endl;
+
+        return "";
+    }
+
+    uint64_t offset = hash_table[key];
 
     ifstream file(filename, ios::binary);
 
@@ -43,6 +53,23 @@ string read_record(const string& filename, const string& key){
 
         return "";
     }
+
+
+    file.seekg(offset);
+    uint32_t key_len = 0;
+    uint32_t val_len = 0;
+
+    file.read(reinterpret_cast<char*>(&key_len), sizeof(key_len));
+    file.read(reinterpret_cast<char*>(&val_len), sizeof(val_len));
+
+    file.seekg(key_len, ios::cur);
+
+    string value(val_len, '\0');
+    file.read(&value[0], val_len);
+
+    file.close();
+    return value;
+
 
 }
 
